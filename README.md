@@ -2,19 +2,19 @@
 
 **Data analysis for Predictive Analytics Competition 2019 and Frontiers Special Issue 2020**
 
-This code belongs to the preprint "Distributional Transformation improves Decoding Accuracy when Predicting Chronological Age from Structural MRI", submitted to the special issue "[Predicting Chronological Age from Structural Neuroimaging: The Predictive Analytics Competition 2019](https://www.frontiersin.org/research-topics/13501/predicting-chronological-age-from-structural-neuroimaging-the-predictive-analytics-competition-2019)" of *Frontiers in Computational Psychiatry*. It consists of MATLAB scripts for feature extraction (Section 2.2), decoding analyses (Section 2.3) and results display (Section 3).
+This code belongs to the preprint "Distributional Transformation improves Decoding Accuracy when Predicting Chronological Age from Structural MRI", submitted to the special issue "[Predicting Chronological Age from Structural Neuroimaging: The Predictive Analytics Competition 2019](https://www.frontiersin.org/research-topics/13501/predicting-chronological-age-from-structural-neuroimaging-the-predictive-analytics-competition-2019)" of *Frontiers in Psychiatry* (Section: *Computational Psychiatry*). It consists of MATLAB scripts for feature extraction (Section 2.2), decoding analyses (Section 2.3) and results display (Section 3).
 
-- Preprint: TBA
+- Preprint: https://www.biorxiv.org/content/10.1101/2020.09.11.293811v1
 - Code: https://github.com/JoramSoch/PAC_2019
 
 ### Requirements
 
 This code was developed and run using the following software:
 - Windows 10 Pro 64-bit
-- <a href="https://de.mathworks.com/help/matlab/release-notes.html">MATLAB R2019b</a> (Version 9.6)
-- <a href="https://de.mathworks.com/help/stats/index.html">MATLAB's Statistics/ML Toolbox</a>
-- <a href="https://de.mathworks.com/help/deeplearning/index.html">MATLAB's Deep Learning Toolbox</a>
-- <a href="https://www.fil.ion.ucl.ac.uk/spm/software/spm12/">SPM12</a> (Revision 7771 as of 13/01/2020)
+- [MATLAB R2019b](https://de.mathworks.com/help/matlab/release-notes.html) (Version 9.6)
+- [MATLAB's Statistics/ML Toolbox](https://de.mathworks.com/help/stats/index.html)
+- [MATLAB's Deep Learning Toolbox](https://de.mathworks.com/help/deeplearning/index.html)
+- [SPM12](https://www.fil.ion.ucl.ac.uk/spm/software/spm12/) (Revision 7771 as of 13/01/2020)
 
 ### Scripts
 
