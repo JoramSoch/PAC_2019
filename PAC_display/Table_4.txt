@@ -1,0 +1,22 @@
+-> Prediction performance across models and methods:
+   - prediction performance:
+     - without DT:
+       - GLM: r = 0.91, MAE = 5.07.
+       - SVR: r = 0.83, MAE = 6.82.
+       - DNN: r = 0.90, MAE = 5.18.
+     - with DT:
+       - GLM: r = 0.93, MAE = 4.58.
+       - SVR: r = 0.86, MAE = 6.11.
+       - DNN: r = 0.90, MAE = 5.42.
+   - comparison of models:
+     - without DT:
+       - GLM vs. SVR: z = -7.44, p < 0.001.
+       - GLM vs. DNN: z = 0.23, p = 0.817.
+     - with DT:
+       - GLM vs. SVR: z = -5.95, p < 0.001.
+       - GLM vs. DNN: z = -4.12, p < 0.001.
+   - comparison of methods:
+     - with DT vs. without DT:
+       - GLM: z = -4.90, p < 0.001.
+       - SVR: z = -4.78, p < 0.001.
+       - DNN: z = 4.04, p < 0.001.

@@ -4,7 +4,7 @@
 % 
 % Author: Joram Soch, BCCN Berlin
 % E-Mail: joram.soch@bccn-berlin.de
-% Date  : 19/08/2020, 15:44 / 27/08/2020, 17:13 / 08/09/2020, 22:30
+% Date  : 28/10/2020, 20:54
 
 
 clear
@@ -46,15 +46,42 @@ alpha = [0.1, 0.05, 0.001, 0.05/250];
 
 %%% Step 1: Process data %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% get dimensions
+% Figure 1: get dimensions
      p0  = 116;
 [n1, p1] = size(X1);
 [n2, p2] = size(X2);
 
-% prepare histograms
-n_bin = numel(y_bin);
+% Figure 2: fit regression line
+y2_mn = zeros(2,K,M);
+for j = 1:M
+    for k = 1:K
+        y2_mn(:,k,j) = polyfit(y2, y2_est(:,k,j), 1)';
+    end;
+end;
 
-% generate histograms
+% Table 4: Wilcoxon signed-rank test
+y2_AE = abs(repmat(y2,[1, K, M]) - y2_est);
+% y2_AE = zeros(size(y2_est));
+% for j = 1:M
+%     for k = 1:K
+%         y2_AE(:,k,j) = abs(y2-y2_est(:,k,j));
+%     end;
+% end;
+y2_p1 = zeros(K,M);
+y2_p2 = zeros(1,M);
+y2_z1 = zeros(K,M);
+y2_z2 = zeros(1,M);
+for j = 1:M
+    for k = 1:K
+       [y2_p1(k,j), h, stats] = signrank(y2_AE(:,k,1), y2_AE(:,k,j));
+        if j ~= 1, y2_z1(k,j) = stats.zval; end;
+    end;
+   [y2_p2(j), h, stats] = signrank(y2_AE(:,2,j), y2_AE(:,1,j));
+    y2_z2(j) = stats.zval;
+end;
+
+% Figure 4: generate histograms
+n_bin  = numel(y_bin);
 f1_obs = MD_pmf(y1, y_bin);
 f2_obs = MD_pmf(y2, y_bin);
 f21_KL = MD_KL(f2_obs, f1_obs);
@@ -68,10 +95,10 @@ for j = 1:M
     end;
 end;
 
-% Kolmogorov–Smirnov test
+% Figure 4: Kolmogorov–Smirnov test
 [h, y21_p, y21_D] = kstest2(y2, y1);
 [h, y22_p, y22_D] = kstest2(y2, y2);
-f2e_D = zeros(K, M);
+y2e_D = zeros(K, M);
 y2e_p = zeros(K, M);
 for j = 1:M
     for k = 1:K
@@ -79,7 +106,7 @@ for j = 1:M
     end;
 end;
 
-% confidence intervals
+% Figure 5: confidence intervals
 y = [y1; y2];
 X = [X1; X2];
 n = size(X,1);
@@ -88,13 +115,13 @@ C = eye(p);
 covB   = (X'*X)^(-1);
 b_est  = (X'*X)^(-1) * X'*y;
 s2_est = 1/(n-p) * (y-X*b_est)'*(y-X*b_est);
-cb = C'*b_est;
-SE = diag(sqrt(s2_est * C'*covB*C));
-CI = zeros(numel(cb),numel(alpha));
-sig= false(numel(cb),numel(alpha));
+cb  = C'*b_est;
+SE  = diag(sqrt(s2_est * C'*covB*C));
+CI  = zeros(numel(cb),numel(alpha));
+sig = false(numel(cb),numel(alpha));
 for i = 1:numel(alpha)
-    CI(:,i) = 2*SE*norminv(1-alpha(i)/2, 0, 1);
-    sig(:,i)= sign(cb-CI(:,i)/2)==sign(cb+CI(:,i)/2);
+    CI(:,i)  = 2*SE*norminv(1-alpha(i)/2, 0, 1);
+    sig(:,i) = sign(cb-CI(:,i)/2)==sign(cb+CI(:,i)/2);
 end;
 
 
@@ -162,6 +189,7 @@ for j = 1:M
     for k = 1:K
         subplot(K,M,(k-1)*M+j); hold on;
         plot(y2, y2_est(:,k,j), strcat('.',cols(j)), 'MarkerSize', 5);
+        plot([y_mm(1,:)], [y2_mn(1,k,j)*y_mm(1,:) + y2_mn(2,k,j)], '--k', 'LineWidth', 1);
         plot([y_mm(1,:)], [y_mm(1,:)], '-k', 'LineWidth', 1);
         axis([y_mm(1,:), y_mm(1,:)]);
         axis square;
@@ -169,8 +197,40 @@ for j = 1:M
         xlabel('actual age', 'FontSize', 12);
         ylabel('predicted age', 'FontSize', 12);
         title(sprintf('%s %s', mods{j}, meth{k}), 'FontSize', 16);
+        text(y_mm(1,1)+20, y_mm(1,2)-5, sprintf('r = %1.2f\nMAE = %1.2f', r(3,k,j), MAE(3,k,j)), 'HorizontalAlignment', 'Right', 'VerticalAlignment', 'Top');
     end;
 end;
+
+% Table 4: prediction accuracies
+fprintf('\n-> Prediction performance across models and methods:');
+fprintf('\n   - prediction performance:');
+for k = 1:K
+    fprintf('\n     - %s:', meth{k});
+    for j = 1:M
+        fprintf('\n       - %s: r = %1.2f, MAE = %1.2f.', mods{j}, r(3,k,j), MAE(3,k,j));
+    end;
+end;
+fprintf('\n   - comparison of models:');
+for k = 1:K
+    fprintf('\n     - %s:', meth{k});
+    for j = 2:M
+        if y2_p1(k,j) < 0.001
+            fprintf('\n       - GLM vs. %s: z = %1.2f, p < 0.001.', mods{j}, y2_z1(k,j));
+        else
+            fprintf('\n       - GLM vs. %s: z = %1.2f, p = %1.3f.', mods{j}, y2_z1(k,j), y2_p1(k,j));
+        end;
+    end;
+end;
+fprintf('\n   - comparison of methods:');
+fprintf('\n     - %s vs. %s:', meth{2}, meth{1});
+for j = 1:M
+    if y2_p2(j) < 0.001
+        fprintf('\n       - %s: z = %1.2f, p < 0.001.', mods{j}, y2_z2(j));
+    else
+        fprintf('\n       - %s: z = %1.2f, p = %1.3f.', mods{j}, y2_z2(j), y2_p2(j));
+    end;
+end;
+fprintf('\n\n');
 
 % Figure 3: prediction accuracies
 figure('Name', 'PAC 2019: Figure 3', 'Color', [1 1 1], 'Position', [fo, fs]);
@@ -268,8 +328,8 @@ axis([(1-0.5), (p+0.5), y_lims]);
 set(gca,'Box','On');
 set(gca,'XTick',[(1/2)*p0, (3/2)*p0, 2*p0+8, p1],'XTickLabel',{'GM', 'WM', 'site', 'sex'});
 xlabel('regressor', 'FontSize', 12);
-ylabel('estimate [yrs]', 'FontSize', 12);
-title(sprintf('GLM: parameter estimates and %d%% confidence intervals', round((1-alpha(1))*100)), 'FontSize', 16);
+ylabel(sprintf('parameter estimate and %d%% confidence interval', round((1-alpha(1))*100)), 'FontSize', 12);
+title('GLM: regression coefficients', 'FontSize', 16);
 for i = 1:numel(cb)
     if sig(i,2)
         text(i, y_pos+0, '*', 'HorizontalAlignment', 'Center', 'VerticalAlignment', 'Middle');
