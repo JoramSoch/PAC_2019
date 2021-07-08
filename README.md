@@ -2,9 +2,10 @@
 
 **Data analysis for Predictive Analytics Competition 2019 and Frontiers Special Issue 2020**
 
-This code belongs to the preprint "Distributional Transformation improves Decoding Accuracy when Predicting Chronological Age from Structural MRI", submitted to the special issue "[Predicting Chronological Age from Structural Neuroimaging: The Predictive Analytics Competition 2019](https://www.frontiersin.org/research-topics/13501/predicting-chronological-age-from-structural-neuroimaging-the-predictive-analytics-competition-2019)" of *Frontiers in Psychiatry* (Section: *Computational Psychiatry*). It consists of MATLAB scripts for feature extraction (Section 2.2), decoding analyses (Section 2.3) and results display (Section 3).
+This code belongs to the paper "Distributional Transformation improves Decoding Accuracy when Predicting Chronological Age from Structural MRI", published in the special issue "[Predicting Chronological Age from Structural Neuroimaging: The Predictive Analytics Competition 2019](https://www.frontiersin.org/research-topics/13501/predicting-chronological-age-from-structural-neuroimaging-the-predictive-analytics-competition-2019)" of *Frontiers in Psychiatry* (Section: *Computational Psychiatry*). It consists of MATLAB scripts for feature extraction (Section 2.2), decoding analyses (Section 2.3) and results display (Section 3).
 
-- Preprint: https://www.biorxiv.org/content/10.1101/2020.09.11.293811v1
+- Preprint: https://www.biorxiv.org/content/10.1101/2020.09.11.293811v3
+- Paper: https://www.frontiersin.org/articles/10.3389/fpsyt.2020.604268
 - Code: https://github.com/JoramSoch/PAC_2019
 
 ### Requirements
@@ -28,7 +29,7 @@ This repository contains the following analysis scripts:
 
 This repository contains the following auxiliary functions:
 - `ME_prep_deep.m`: prepares features for deep learning (Section 2.3.3)
-- `MD_trans_dist.m`: performs distributional transformation (Section 2.4)
+- `MD_trans_dist.m`: performs [distributional transformation](https://statproofbook.github.io/P/cdf-dt) (Section 2.4)
 - `ME_meas_corr.m`: calculates performance measures (Section 2.5)
 - `PAC_display/MD_pmf.m`: estimates [probability mass function](https://statproofbook.github.io/D/pmf)
 - `PAC_display/MD_KL.m`: estimates [Kullback-Leibler divergence](https://statproofbook.github.io/D/kl)
